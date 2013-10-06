@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name 		User Interface Script (Big Release World)
 // @namespace 	http://wofh.ru/
-// @author      http://code.google.com/p/wofh-ui-user-js/people/list +raz13l[some fix]
-// @version     1.4 
+// @author      http://code.google.com/p/wofh-ui-user-js/people/list
+// @version     1.4
 // @include     http://w*.wofh.ru/*
 // ==/UserScript==
 
@@ -418,11 +418,17 @@ Holder.prototype.injectTownInfo = function() {
     data = data[0].innerHTML.match(/^(.*)\((.*)\)$/);
     var tname = data[1].trim();
     tid = data[2].trim();
-
+	/*
     data = $x("//div[@id='inf_tt_u']/div[@id='inf_tt_text_table1']/a[contains(@href, 'account?id=')]");
     var pid = data[0].href.match(/id=(\d+)/)[1];
     var pname = data[0].innerHTML.trim();
-
+	*/
+    var getElementByXpath = function (path) {
+    return document.evaluate(path, document, null, 9, null).singleNodeValue;
+	};
+    data = getElementByXpath('//*[@id="cont04"]/div[2]/div/div[1]/div[1]/div[2]/dl[2]/dd/a[1]');
+    var pid = data.attributes[0].value.split('=')[1];
+    var pname = data.innerText;
     var country = null;
     /*
     data = $x("//div[@id='inf_tt_u']/div[@id='inf_tt_text_table1']/a[contains(@href, 'countryinfo?id=')]");
@@ -432,9 +438,6 @@ Holder.prototype.injectTownInfo = function() {
         country = { id: -1, name: 'В стране не состоит' };
     }
 	*/
-	var getElementByXpath = function (path) {
-    return document.evaluate(path, document, null, 9, null).singleNodeValue;
-	};
     data = getElementByXpath('//*[@id="cont04"]/div[2]/div/div[1]/div[1]/div[2]/dl[3]/dd/a');
     if (data != null) {
         coutry = { id: data.attributes[0].value.split('=')[1], name: data.innerText };
